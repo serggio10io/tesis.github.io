@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Grammar Masters | Interactive Learning Platform</title>
+    <style>
+        :root {
+            --primary-color: #0066ff;
+            --secondary-color: #f5f7fa;
+            --text-color: #333333;
+            --hover-color: rgba(0, 102, 255, 0.8);
+            --background-light: #ffffff;
+            --accent-color: #0066ff;
+            --border-color: #e0e0e0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--background-light);
+            color: var(--text-color);
+            overflow-x: hidden;
+            padding-bottom: 80px; /* Space for bottom navigation */
+        }
+        
+        header {
+            background-color: var(--background-light);
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border-radius: 0 0 20px 20px;
+        }
+        
+        .brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            padding: 0.5rem 1rem;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 10px;
+            display: inline-block;
+        }
+        
+        .tagline {
+            color: var(--primary-color);
+            font-size: 2rem;
+            margin-left: 10px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.8;
+            margin-left: 10px;
+            color: var(--text-color);
+        }
+        
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem;
+            background-color: var(--background-light);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+            min-height: 600px;
+        }
+        
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s forwards;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .card {
+            background: var(--background-light);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 102, 255, 0.1);
+        }
+        
+        .card h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.7rem 1.2rem;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: background-color 0.3s;
+            font-weight: 600;
+        }
+        
+        .btn:hover {
+            background-color: var(--hover-color);
+        }
+        
+        .exercise-container {
+            background: var(--secondary-color);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .question {
+            margin-bottom: 1.5rem;
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+        
+        .option {
+            background: var(--background-light);
+            padding: 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border: 1px solid var(--border-color);
+        }
+        
+        .option:hover {
+            background-color: rgba(0, 102, 255, 0.05);
+        }
+        
+        .option.correct {
+            background-color: rgba(0, 200, 0, 0.1);
+            border-color: rgba(0, 200, 0, 0.5);
+        }
+        
+        .option.incorrect {
+            background-color: rgba(255, 0, 0, 0.1);
+            border-color: rgba(255, 0, 0, 0.5);
+        }
+        
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            margin: 2rem 0;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .video-container img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 15px;
+        }
+        
+        .video-play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70px;
+            height: 70px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .video-play-button:before {
+            content: "";
+            width: 0;
+            height: 0;
+            border-top: 15px solid transparent;
+            border-bottom: 15px solid transparent;
+            border-left: 25px solid white;
+            margin-left: 5px;
+        }
+        
+        .progress-section {
+            margin-top: 2rem;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: rgba(0, 0, 0, 0.05);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 35%;
+            border-radius: 5px;
+            transition: width 0.5s;
+        }
+        
+        .grammar-rule {
+            background: rgba(0, 102, 255, 0.05);
+            border-left: 3px solid var(--primary-color);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 10px 10px 0;
+        }
+        
+        .example {
+            font-style: italic;
+            color: var(--primary-color);
+            margin: 0.5rem 0;
+        }
+        
+        /* Audio player styling */
+        .audio-player {
+            background: var(--secondary-color);
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 1rem 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .audio-play-button {
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            margin-right: 1rem;
+        }
+        
+        .audio-play-button:before {
+            content: "";
+            width: 0;
+            height: 0;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            border-left: 15px solid white;
+            margin-left: 3px;
+        }
+        
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            border-radius: 20px 20px 0 0;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .nav-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        .nav-item.active .nav-icon {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .nav-text {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+        
+        .nav-item.active .nav-text {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .tagline {
+                font-size: 1.6rem;
+            }
+            
+            .subtitle {
+                font-size: 0.9rem;
+            }
+            
+            .options {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="brand">English Grammar Masters</div>
+        <h1 class="tagline">Interactive Learning</h1>
+        <p class="subtitle">Mastering English grammar through practice and multimedia</p>
+    </header>
+    
+    <div class="main-container">
+        <!-- LESSONS SECTION -->
+        <section id="lessons" class="content-section active">
+            <h2>Grammar Lessons</h2>
+            <p>Welcome to our comprehensive English grammar lessons. Select a topic to begin learning.</p>
+            
+            <div class="grid-container">
+                <div class="card">
+                    <h3>Verb Tenses</h3>
+                    <p>Learn about the 12 verb tenses in English and when to use each one correctly.</p>
+                    <button class="btn" onclick="loadLesson('verb-tenses')">Start Learning</button>
+                </div>
+                
+                <div class="card">
+                    <h3>Modal Verbs</h3>
+                    <p>Master modal verbs like can, could, should, would, and must.</p>
+                    <button class="btn" onclick="loadLesson('modal-verbs')">Start Learning</button>
+                </div>
+                
+                <div class="card">
+                    <h3>Conditionals</h3>
+                    <p>Understand the four types of conditional sentences in English.</p>
+                    <button class="btn" onclick="loadLesson('conditionals')">Start Learning</button>
+                </div>
+                
+                <div class="card">
+                    <h3>Passive Voice</h3>
+                    <p>Learn when and how to use the passive voice effectively in your writing.</p>
+                    <button class="btn" onclick="loadLesson('passive-voice')">Start Learning</button>
+                </div>
+            </div>
+            
+            <div id="lesson-content" style="display: none;">
+                <h3 id="lesson-title">Lesson Title</h3>
+                <div id="lesson-body">
+                    <!-- Lesson content will be loaded here -->
+                </div>
+            </div>
+        </section>
+        
+        <!-- EXERCISES SECTION -->
+        <section id="exercises" class="content-section">
+            <h2>Grammar Exercises</h2>
+            <p>Test your knowledge with interactive exercises and get immediate feedback.</p>
+            
+            <div class="exercise-container">
+                <h3>Present Perfect vs. Past Simple</h3>
+                
+                <div class="question">
+                    <p>1. She ________ (live) in London for five years before moving to Paris.</p>
+                    <div class="options">
+                        <div class="option" onclick="checkAnswer(this, true)">had lived</div>
+                        <div class="option" onclick="checkAnswer(this, false)">has lived</div>
+                        <div class="option" onclick="checkAnswer(this, false)">lived</div>
+                        <div class="option" onclick="checkAnswer(this, false)">was living</div>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <p>2. I ________ (never/visit) Japan, but I would like to go someday.</p>
+                    <div class="options">
+                        <div class="option" onclick="checkAnswer(this, false)">never visited</div>
+                        <div class="option" onclick="checkAnswer(this, true)">have never visited</div>
+                        <div class="option" onclick="checkAnswer(this, false)">had never visited</div>
+                        <div class="option" onclick="checkAnswer(this, false)">am never visiting</div>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <p>3. ________ you ________ (finish) your homework yet?</p>
+                    <div class="options">
+                        <div class="option" onclick="checkAnswer(this, false)">Did, finish</div>
+                        <div class="option" onclick="checkAnswer(this, false)">Were, finishing</div>
+                        <div class="option" onclick="checkAnswer(this, true)">Have, finished</div>
+                        <div class="option" onclick="checkAnswer(this, false)">Had, finished</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- VIDEOS SECTION -->
+        <section id="videos" class="content-section">
+            <h2>Video Lessons</h2>
+            <p>Watch interactive video lessons explaining key grammar concepts with examples.</p>
+            
+            <div class="video-container">
+                <img src="/placeholder.svg?height=450&width=800" alt="Video thumbnail - Using Present Perfect">
+                <div class="video-play-button"></div>
+            </div>
+            
+            <h3>Present Perfect: Form and Usage</h3>
+            <p>This video explains when and how to use the Present Perfect tense in English, with examples of both regular and irregular verbs.</p>
+            
+            <div class="grammar-rule">
+                <h4>Remember:</h4>
+                <p>We form the Present Perfect with <strong>have/has + past participle</strong></p>
+                <p class="example">I have visited Paris three times.</p>
+                <p class="example">She has lived here since 2010.</p>
+            </div>
+            
+            <div class="audio-player">
+                <div class="audio-play-button"></div>
+                <div>
+                    <p><strong>Pronunciation Practice</strong></p>
+                    <p>Listen and repeat: "I've already finished my homework."</p>
+                </div>
+            </div>
+            
+            <div class="video-container">
+                <img src="/placeholder.svg?height=450&width=800" alt="Video thumbnail - Conditional Sentences">
+                <div class="video-play-button"></div>
+            </div>
+            
+            <h3>Conditional Sentences: Types 0-3</h3>
+            <p>Learn about the four types of conditional sentences in English and how to form them correctly.</p>
+        </section>
+        
+        <!-- PROGRESS SECTION -->
+        <section id="progress" class="content-section">
+            <h2>Your Learning Progress</h2>
+            <p>Track your progress through the different grammar topics.</p>
+            
+            <div class="progress-section">
+                <h3>Verb Tenses</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 75%;"></div>
+                </div>
+                <p>75% Complete</p>
+            </div>
+            
+            <div class="progress-section">
+                <h3>Modal Verbs</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 40%;"></div>
+                </div>
+                <p>40% Complete</p>
+            </div>
+            
+            <div class="progress-section">
+                <h3>Conditionals</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 20%;"></div>
+                </div>
+                <p>20% Complete</p>
+            </div>
+            
+            <div class="progress-section">
+                <h3>Passive Voice</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%;"></div>
+                </div>
+                <p>0% Complete</p>
+            </div>
+            
+            <h3 style="margin-top: 2rem;">Certificates</h3>
+            <p>Complete all lessons and exercises to earn your certificate in English Grammar Mastery.</p>
+        </section>
+    </div>
+    
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <div class="nav-item active" onclick="switchTab('lessons')">
+            <div class="nav-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                </svg>
+            </div>
+            <span class="nav-text">Aprender</span>
+        </div>
+        
+        <div class="nav-item" onclick="switchTab('exercises')">
+            <div class="nav-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <line x1="10" y1="9" x2="8" y2="9"></line>
+                </svg>
+            </div>
+            <span class="nav-text">Ejercicios</span>
+        </div>
+        
+        <div class="nav-item" onclick="switchTab('videos')">
+            <div class="nav-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="23 7 16 12 23 17 23 7"></polygon>
+                    <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                </svg>
+            </div>
+            <span class="nav-text">Videos</span>
+        </div>
+        
+        <div class="nav-item" onclick="switchTab('progress')">
+            <div class="nav-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="20" x2="12" y2="10"></line>
+                    <line x1="18" y1="20" x2="18" y2="4"></line>
+                    <line x1="6" y1="20" x2="6" y2="16"></line>
+                </svg>
+            </div>
+            <span class="nav-text">Progreso</span>
+        </div>
+    </div>
+    
+    <script>
+        // Tab switching functionality
+        function switchTab(tabId) {
+            // Hide all content sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show the selected content section
+            document.getElementById(tabId).classList.add('active');
+            
+            // Update the active tab in bottom navigation
+            document.querySelectorAll('.nav-item').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Find the nav item that corresponds to this tab and make it active
+            const activeNavItem = document.querySelector(`.nav-item[onclick="switchTab('${tabId}')"]`);
+            activeNavItem.classList.add('active');
+            
+            // If clicking on "Aprender" (Lessons), directly show definitions
+            if (tabId === 'lessons') {
+                // If there's no active lesson, load the first one by default
+                if (document.getElementById('lesson-content').style.display !== 'block') {
+                    loadLesson('verb-tenses');
+                }
+            }
+        }
+        
+        // Function to load a specific lesson
+        function loadLesson(lessonId) {
+            document.getElementById('lesson-content').style.display = 'block';
+            
+            // Scroll to the lesson content
+            document.getElementById('lesson-content').scrollIntoView({
+                behavior: 'smooth'
+            });
+            
+            // Set the lesson title
+            const lessonTitle = document.getElementById('lesson-title');
+            const lessonBody = document.getElementById('lesson-body');
+            
+            // Load lesson content based on the lesson ID
+            switch(lessonId) {
+                case 'verb-tenses':
+                    lessonTitle.textContent = 'Verb Tenses in English';
+                    lessonBody.innerHTML = `
+                        <p>English has three main time divisions: past, present, and future. Within each of these time divisions, there are four aspects: simple, continuous, perfect, and perfect continuous.</p>
+                        
+                        <div class="grammar-rule">
+                            <h4>Present Simple</h4>
+                            <p>Used for habits, general truths, and scheduled events</p>
+                            <p class="example">I play tennis every Saturday.</p>
+                            <p class="example">The Earth revolves around the Sun.</p>
+                        </div>
+                        
+                        <div class="grammar-rule">
+                            <h4>Present Continuous</h4>
+                            <p>Used for actions happening right now or temporary situations</p>
+                            <p class="example">I am studying for my exam.</p>
+                            <p class="example">She is staying with her parents until she finds an apartment.</p>
+                        </div>
+                        
+                        <div class="audio-player">
+                            <div class="audio-play-button"></div>
+                            <div>
+                                <p><strong>Pronunciation Practice</strong></p>
+                                <p>Listen and repeat: "She's working late tonight."</p>
+                            </div>
+                        </div>
+                        
+                        <div class="grammar-rule">
+                            <h4>Present Perfect</h4>
+                            <p>Used for experiences, changes, or completed actions with a connection to the present</p>
+                            <p class="example">I have visited Paris three times.</p>
+                            <p class="example">She has improved her English a lot since last year.</p>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'modal-verbs':
+                    lessonTitle.textContent = 'Modal Verbs in English';
+                    lessonBody.innerHTML = `
+                        <p>Modal verbs are special verbs that express ability, possibility, permission, or obligation. They are always followed by the base form of the main verb (without "to").</p>
+                        
+                        <div class="grammar-rule">
+                            <h4>Can / Could</h4>
+                            <p>Used to express ability or possibility</p>
+                            <p class="example">I can speak three languages.</p>
+                            <p class="example">Could you help me with this exercise?</p>
+                        </div>
+                        
+                        <div class="grammar-rule">
+                            <h4>Must / Have to</h4>
+                            <p>Used to express obligation or necessity</p>
+                            <p class="example">You must submit your assignment by Friday.</p>
+                            <p class="example">I have to wake up early tomorrow.</p>
+                        </div>
+                        
+                        <div class="grammar-rule">
+                            <h4>Should / Ought to</h4>
+                            <p>Used to give advice or express expectation</p>
+                            <p class="example">You should study more if you want to pass the exam.</p>
+                            <p class="example">The package ought to arrive by tomorrow.</p>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'conditionals':
+                    lessonTitle.textContent = 'Conditional Sentences in English';
+                    lessonBody.innerHTML = `
+                        <p>Conditional sentences express the relationship between two events, where one event depends on another event happening.</p>
+                        
+                        <div class="grammar-rule">
+                            <h4>Zero Conditional</h4>
+                            <p>For general truths or scientific facts</p>
+                            <p class="example">If you heat water to 100°C, it boils.</p>
+                            <p class="example">When it rains, the ground gets wet.</p>
+                        </div>
+                        
+                        <div class="grammar-rule">
+                            <h4>First Conditional</h4>
+                            <p>For possible situations in the future</p>
+                            <p class="example">If it rains tomorrow, we will cancel the picnic.</p>
+                            <p class="example">If you study hard, you will pass the exam.</p>
+                        </div>
+                        
+                        <div class="grammar-rule">
+                            <h4>Second Conditional</h4>
+                            <p>For hypothetical or unlikely situations in the present or future</p>
+                            <p class="example">If I won the lottery, I would travel around the world.</p>
+                            <p class="example">If I were you, I would accept the job offer.</p>
+                        </div>
+                        
+                        <div class="grammar-rule">
+                            <h4>Third Conditional</h4>
+                            <p>For hypothetical situations in the past (that didn't happen)</p>
+                            <p class="example">If I had studied harder, I would have passed the exam.</p>
+                            <p class="example">If she had caught the earlier train, she wouldn't have been late.</p>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'passive-voice':
+                    lessonTitle.textContent = 'The Passive Voice in English';
+                    lessonBody.innerHTML = `
+                        <p>The passive voice is used when we want to emphasize the action rather than who performed it. It's formed with "be" + past participle.</p>
+                        
+                        <div class="grammar-rule">
+                            <h4>Active vs. Passive</h4>
+                            <p>Active: The chef prepares the meal.</p>
+                            <p>Passive: The meal is prepared (by the chef).</p>
+                        </div>
+                        
+                        <div class="grammar-rule">
+                            <h4>When to Use the Passive Voice</h4>
+                            <ul>
+                                <li>When the doer is unknown: My bike was stolen.</li>
+                                <li>When the doer is unimportant: The road is being repaired.</li>
+                                <li>In formal or scientific writing: The experiment was conducted under strict conditions.</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="grammar-rule">
+                            <h4>Passive Voice in Different Tenses</h4>
+                            <p>Present Simple: The house is cleaned every week.</p>
+                            <p>Past Simple: The letter was delivered yesterday.</p>
+                            <p>Present Perfect: The task has been completed.</p>
+                            <p>Future: The new bridge will be opened next month.</p>
+                        </div>
+                    `;
+                    break;
+            }
+        }
+        
+        // Function to check answers in the exercises
+        function checkAnswer(option, isCorrect) {
+            // Remove any existing result classes
+            option.parentElement.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('correct', 'incorrect');
+            });
+            
+            // Mark the selected option
+            if (isCorrect) {
+                option.classList.add('correct');
+            } else {
+                option.classList.add('incorrect');
+                
+                // Find and highlight the correct option
+                option.parentElement.querySelectorAll('.option').forEach(opt => {
+                    if (opt.getAttribute('onclick').includes('true')) {
+                        opt.classList.add('correct');
+                    }
+                });
+            }
+        }
+        
+        // Initialize - load the first lesson by default
+        window.onload = function() {
+            // If we're on the lessons tab, load the first lesson
+            if (document.getElementById('lessons').classList.contains('active')) {
+                loadLesson('verb-tenses');
+            }
+        };
+    </script>
+</body>
+</html>
